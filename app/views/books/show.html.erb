@@ -5,7 +5,7 @@
       <h2>User info</h2>
       <%= render 'users/info', user: @user %>
       <h2 class="mt-3">New book</h2>
-      <%= render 'form', book: @newbook %>
+      <%= render 'books/form', book: @newbook %>
     </div>
     <div class='col-md-8 offset-md-1'>
   		<h2>Book detail</h2>
@@ -22,6 +22,17 @@
             <td><%= link_to 'Edit', edit_book_path(@book), class: "btn btn-sm btn-success edit_book_#{@book.id}" %></td>
             <td><%= link_to 'Destroy', book_path(@book), method: :delete, data: { confirm: '本当に消しますか？' }, class: "btn btn-sm btn-danger destroy_book_#{@book.id}"%></td>
           <% end %>
+          <td>
+            <% if @book.favorited_by?(current_user) %>
+              <%= link_to book_favorite_path(@book,@book.id), method: :delete, class: "text-danger" do %>
+                ♥<%= @book.favorites.count %>
+              <% end %>
+            <% else %>
+              <%= link_to book_favorites_path(@book), method: :post, class: "text-primary" do %>
+                ♥<%= @book.favorites.count %>
+              <% end %>
+            <% end %>
+          </td>
           <td>コメント数：<%= @book.book_comments.count %></td>
         </tr>
       </table>
@@ -54,3 +65,17 @@
     </div>
   </div>
 </div>
+
+
+
+
+rails g model Favorite user_id:integer book_id:integer
+rails g controller Favorites
+
+
+
+
+
+
+
+
